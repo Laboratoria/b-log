@@ -8,18 +8,13 @@ exports.createPages = async ({ graphql, actions }) => {
   const result = await graphql(
     `
       {
-        allMarkdownRemark(
-          sort: { fields: [frontmatter___date], order: DESC }
-          limit: 1000
-        ) {
+        allGoogleSpreadsheetSourceDemos {
           edges {
             node {
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-              }
+              fecha
+              estudiante
+              proyecto
+              video
             }
           }
         }
@@ -32,17 +27,19 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create blog posts pages.
-  const posts = result.data.allMarkdownRemark.edges
+  const demos = result.data.allGoogleSpreadsheetSourceDemos.edges
 
-  posts.forEach((post, index) => {
-    const previous = index === posts.length - 1 ? null : posts[index + 1].node
-    const next = index === 0 ? null : posts[index - 1].node
+  demos.forEach(({ node: demo }, index) => {
+    const previous = index === demos.length - 1 ? null : demos[index + 1].node
+    const next = index === 0 ? null : demos[index - 1].node
+
+    console.log(`/${demo.estudiante}/${demo.proyecto}`)
 
     createPage({
-      path: post.node.fields.slug,
+      path: `/${demo.estudiante}/${demo.proyecto}`,
       component: blogPost,
       context: {
-        slug: post.node.fields.slug,
+        ...demo,
         previous,
         next,
       },
@@ -50,15 +47,15 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
+// exports.onCreateNode = ({ node, actions, getNode }) => {
+//   const { createNodeField } = actions
 
-  if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
-    createNodeField({
-      name: `slug`,
-      node,
-      value,
-    })
-  }
-}
+//   if (node.internal.type === `MarkdownRemark`) {
+//     const value = createFilePath({ node, getNode })
+//     createNodeField({
+//       name: `slug`,
+//       node,
+//       value,
+//     })
+//   }
+// }
