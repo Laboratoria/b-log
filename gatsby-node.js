@@ -1,20 +1,27 @@
 const path = require(`path`)
-const { createFilePath } = require(`gatsby-source-filesystem`)
+// const { createFilePath } = require(`gatsby-source-filesystem`)
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
-  const blogPost = path.resolve(`./src/templates/blog-post.js`)
+  const entryTmpl = path.resolve(`./src/templates/entry.js`)
   const result = await graphql(
     `
       {
-        allGoogleSpreadsheetSourceDemos {
+        allGoogleSpreadsheetSourceEntries {
           edges {
             node {
+              id
               fecha
-              estudiante
+              tipo
+              generacion
+              estudiantes
               proyecto
               video
+              endpoint
+              repo
+              reto
+              jedi
             }
           }
         }
@@ -27,23 +34,31 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create blog posts pages.
-  const demos = result.data.allGoogleSpreadsheetSourceDemos.edges
+  const demos = result.data.allGoogleSpreadsheetSourceEntries.edges
 
-  demos.forEach(({ node: demo }, index) => {
-    const previous = index === demos.length - 1 ? null : demos[index + 1].node
-    const next = index === 0 ? null : demos[index - 1].node
+  demos.forEach(({ node }) => {
+    const estudiantes = node.estudiantes.split('\n');
+    const { tipo, proyecto, generacion, reto } = node;
+    
+    estudiantes.forEach((estudiante) => {
+      createPage({
+        path: `/${estudiante}/${tipo}/${proyecto}`,
+        component: entryTmpl,
+        context: {
+          ...node,
+        },
+      })
+    });
 
-    console.log(`/${demo.estudiante}/${demo.proyecto}`)
-
-    createPage({
-      path: `/${demo.estudiante}/${demo.proyecto}`,
-      component: blogPost,
-      context: {
-        ...demo,
-        previous,
-        next,
-      },
-    })
+    if (estudiantes.length > 1) {
+      createPage({
+        path: `/${generacion}/${proyecto}/${reto}/${tipo}`,
+        component: entryTmpl,
+        context: {
+          ...node,
+        },
+      })
+    }
   })
 }
 

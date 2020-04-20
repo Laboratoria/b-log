@@ -1,20 +1,27 @@
 import React from "react"
 import { Link, graphql } from "gatsby"
 
-import Bio from "../components/bio"
 import Layout from "../components/layout"
-import SEO from "../components/seo"
 import { rhythm } from "../utils/typography"
 
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata.title
-  const demos = data.allGoogleSpreadsheetSourceDemos.edges.map((e) => e.node);
+  let entries = data.allGoogleSpreadsheetSourceEntries.edges.map((e) => e.node);
+  entries = entries.sort((a, b) => a.fecha < b.fecha);
 
   return (
     <Layout location={location} title={siteTitle}>
-      <SEO title="All posts" />
-      {demos.map(({ fecha, estudiante, proyecto, video }) => {
-        const title = `${estudiante} ${proyecto}`;
+      {entries.map(({ fecha, estudiantes, proyecto, tipo, generacion, reto }) => {
+        const estudiantesArr = estudiantes.split('\n');
+        let title;
+        let url;
+        if (estudiantesArr.length > 1) {
+          title = `${proyecto} ${generacion} ${reto}`;
+          url = `/${generacion}/${proyecto}/${reto}/${tipo}`;
+        } else {
+          title = `${estudiantes} ${proyecto} (${generacion})`;
+          url = `/${estudiantes}/${tipo}/${proyecto}`;
+        }
         return (
           <article key={title}>
             <header>
@@ -23,11 +30,11 @@ const BlogIndex = ({ data, location }) => {
                   marginBottom: rhythm(1 / 4),
                 }}
               >
-                <Link style={{ boxShadow: `none` }} to={`/${estudiante}/${proyecto}`}>
-                  {title}
+                <Link style={{ boxShadow: `none` }} to={url}>
+                  {tipo} {proyecto} {reto || ''}
                 </Link>
               </h3>
-              <small>{fecha}</small>
+              <small>{fecha.substr(0, 10)} - {estudiantesArr.map((e) => (<strong>{e}, </strong>))}</small>
             </header>
           </article>
         )
@@ -45,13 +52,20 @@ export const pageQuery = graphql`
         title
       }
     }
-    allGoogleSpreadsheetSourceDemos {
+    allGoogleSpreadsheetSourceEntries {
       edges {
         node {
+          id
           fecha
-          estudiante
+          tipo
+          generacion
+          estudiantes
           proyecto
           video
+          endpoint
+          repo
+          reto
+          jedi
         }
       }
     }

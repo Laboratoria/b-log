@@ -4,16 +4,9 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
-    author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`,
-    },
-    description: `A starter blog demonstrating what Gatsby can do.`,
+    title: `Bootcamp Log`,
+    description: `Bitacora del Bootcamp`,
     siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
-    social: {
-      twitter: `kylemathews`,
-    },
   },
   plugins: [
     {
@@ -60,12 +53,12 @@ module.exports = {
         //trackingId: `ADD YOUR TRACKING ID HERE`,
       },
     },
-    `gatsby-plugin-feed`,
+    // `gatsby-plugin-feed`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `Laboratoria Bootcamp`,
+        short_name: `bootcamp`,
         start_url: `/`,
         background_color: `#ffffff`,
         theme_color: `#663399`,
@@ -91,7 +84,7 @@ module.exports = {
       options: {
         // The `spreadsheetId` is required, it is found in the url of your document:
         // https://docs.google.com/spreadsheets/d/<spreadsheetId>/edit#gid=0
-        spreadsheetId: process.env.DEMOS_SHEET_ID,
+        spreadsheetId: process.env.SOURCE_SHEET_ID,
     
         // The `spreadsheetName` is recommended, but optional
         // It is used as part of the id's during the node creation, as well as in the generated GraphQL-schema
