@@ -31,7 +31,7 @@ const BlogIndex = ({ data, location }) => {
                 }}
               >
                 <Link style={{ boxShadow: `none` }} to={url}>
-                  {tipo} {proyecto} {reto || ''}
+                  [{generacion}] {proyecto} {reto || ''} - {tipo}
                 </Link>
               </h3>
               <small>{fecha.substr(0, 10)} - {estudiantesArr.map((e) => (<strong>{e}, </strong>))}</small>

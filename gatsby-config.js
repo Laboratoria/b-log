@@ -8,6 +8,7 @@ module.exports = {
     description: `Bitacora del Bootcamp`,
     siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
   },
+  pathPrefix: '/b-log',
   plugins: [
     {
       resolve: `gatsby-source-filesystem`,
